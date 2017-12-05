@@ -34,7 +34,7 @@
 		F214E6080D5F646E00A06962 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F214E6060D5F646E00A06962 /* main.m */; };
 		F214E60C0D5F64BF00A06962 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = F214E60B0D5F64BF00A06962 /* AppController.m */; };
 		F214E6170D5F660100A06962 /* TCMPortMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3180119F0D4DEC8400BE3B28 /* TCMPortMapper.framework */; };
-		F214E6200D5F661400A06962 /* TCMPortMapper.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 3180119F0D4DEC8400BE3B28 /* TCMPortMapper.framework */; };
+		F214E6200D5F661400A06962 /* TCMPortMapper.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 3180119F0D4DEC8400BE3B28 /* TCMPortMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F217EF220D6082B40028E112 /* TCPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = F217EF210D6082B40028E112 /* TCPServer.m */; };
 		F21B769B0DB73D2C00942BC0 /* miniwget.c in Sources */ = {isa = PBXBuildFile; fileRef = F2301B180D685C1B00728699 /* miniwget.c */; };
 		F21B769C0DB73D2C00942BC0 /* minixml.c in Sources */ = {isa = PBXBuildFile; fileRef = F2301B1B0D685C1B00728699 /* minixml.c */; };
@@ -62,7 +62,7 @@
 		F2482BBB0D58ABFA002DF811 /* TCMPortStringFromPublicPortValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = F2482BBA0D58ABFA002DF811 /* TCMPortStringFromPublicPortValueTransformer.m */; };
 		F27B83B60ED94616008E1983 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F27B83B40ED94616008E1983 /* Localizable.strings */; };
 		F290D6160EDAC1B200E643C0 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F290D6150EDAC1B200E643C0 /* Sparkle.framework */; };
-		F290D6210EDAC1C800E643C0 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = F290D6150EDAC1B200E643C0 /* Sparkle.framework */; };
+		F290D6210EDAC1C800E643C0 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = F290D6150EDAC1B200E643C0 /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F290D6340EDAC44000E643C0 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = F290D6330EDAC44000E643C0 /* dsa_pub.pem */; };
 		F290D63E0EDAEBFB00E643C0 /* portmap_releasenotes.css in Resources */ = {isa = PBXBuildFile; fileRef = F290D63C0EDAEBFB00E643C0 /* portmap_releasenotes.css */; };
 		F290D63F0EDAEBFB00E643C0 /* portmap_releasenotes.html in Resources */ = {isa = PBXBuildFile; fileRef = F290D63D0EDAEBFB00E643C0 /* portmap_releasenotes.html */; };
@@ -86,7 +86,7 @@
 		F2C6603F0D50C62F00820CAE /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = F2C6603B0D50C62F00820CAE /* MainMenu.nib */; };
 		F2C660400D50C62F00820CAE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F2C6603D0D50C62F00820CAE /* InfoPlist.strings */; };
 		F2C660480D50C68400820CAE /* TCMPortMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3180119F0D4DEC8400BE3B28 /* TCMPortMapper.framework */; };
-		F2C660510D50C69A00820CAE /* TCMPortMapper.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 3180119F0D4DEC8400BE3B28 /* TCMPortMapper.framework */; };
+		F2C660510D50C69A00820CAE /* TCMPortMapper.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 3180119F0D4DEC8400BE3B28 /* TCMPortMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		F2CDB8C80D65BF2200B6A4E7 /* NSAddTemplate.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F2CDB8C50D65BF2200B6A4E7 /* NSAddTemplate.tiff */; };
 		F2CDB8C90D65BF2200B6A4E7 /* NSRefreshTemplate.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F2CDB8C60D65BF2200B6A4E7 /* NSRefreshTemplate.tiff */; };
 		F2CDB8CA0D65BF2200B6A4E7 /* NSRemoveTemplate.tiff in Resources */ = {isa = PBXBuildFile; fileRef = F2CDB8C70D65BF2200B6A4E7 /* NSRemoveTemplate.tiff */; };
@@ -722,7 +722,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0920;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Port Map" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -988,6 +988,7 @@
 					"-framework",
 					AppKit,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.codingmonkeys.TCMPortMapper;
 				PRODUCT_NAME = TCMPortMapper;
 				USER_HEADER_SEARCH_PATHS = framework;
 			};
@@ -1021,6 +1022,7 @@
 					"-framework",
 					AppKit,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.codingmonkeys.TCMPortMapper;
 				PRODUCT_NAME = TCMPortMapper;
 				USER_HEADER_SEARCH_PATHS = framework;
 			};
@@ -1029,10 +1031,32 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_VERSION = "";
 				"GCC_VERSION[sdk=macosx10.4]" = "";
 				"GCC_VERSION[sdk=macosx10.5][arch=x86_64]" = "";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1048,10 +1072,31 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_VERSION = "";
 				"GCC_VERSION[sdk=macosx10.4]" = "";
 				"GCC_VERSION[sdk=macosx10.5][arch=x86_64]" = "";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
@@ -1084,6 +1129,7 @@
 					"-framework",
 					AppKit,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.codingmonkeys.TCMPortMapper.NATEcho;
 				PRODUCT_NAME = NATEcho;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1109,6 +1155,7 @@
 					"-framework",
 					AppKit,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.codingmonkeys.TCMPortMapper.NATEcho;
 				PRODUCT_NAME = NATEcho;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1233,6 +1280,7 @@
 					"-framework",
 					AppKit,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.codingmonkeys.TCMPortMapper.PortMap;
 				PRODUCT_NAME = "Port Map";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1258,6 +1306,7 @@
 					"-framework",
 					AppKit,
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = de.codingmonkeys.TCMPortMapper.PortMap;
 				PRODUCT_NAME = "Port Map";
 				WRAPPER_EXTENSION = app;
 			};
