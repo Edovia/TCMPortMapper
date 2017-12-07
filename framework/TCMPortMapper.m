@@ -13,6 +13,8 @@
 #import <netinet/if_ether.h>
 #import <net/if_dl.h>
 
+@import AppKit;
+
 // openssl is deprecated on OS X 10.7+
 #ifdef USE_OPENSSL
 #import <openssl/md5.h>
@@ -82,22 +84,20 @@ enum {
 
 + (id)portMappingWithLocalPort:(int)aPrivatePort desiredExternalPort:(int)aPublicPort transportProtocol:(int)aTransportProtocol userInfo:(id)aUserInfo {
     NSAssert(aPrivatePort<65536 && aPublicPort<65536 && aPrivatePort>0 && aPublicPort>0, @"Port number has to be between 1 and 65535");
-    return [[[self alloc] initWithLocalPort:aPrivatePort desiredExternalPort:aPublicPort transportProtocol:aTransportProtocol userInfo:aUserInfo] autorelease];
+    return [[self alloc] initWithLocalPort:aPrivatePort desiredExternalPort:aPublicPort transportProtocol:aTransportProtocol userInfo:aUserInfo];
 }
 
 - (id)initWithLocalPort:(int)aPrivatePort desiredExternalPort:(int)aPublicPort transportProtocol:(int)aTransportProtocol userInfo:(id)aUserInfo {
     if ((self=[super init])) {
         _desiredExternalPort = aPublicPort;
         _localPort = aPrivatePort;
-        _userInfo = [aUserInfo retain];
+        _userInfo = aUserInfo;
         _transportProtocol = aTransportProtocol;
     }
     return self;
 }
 
 - (void)dealloc {
-    [_userInfo release];
-    [super dealloc];
 }
 
 - (int)desiredExternalPort {
@@ -177,7 +177,6 @@ enum {
 
 - (id)init {
     if (S_sharedInstance) {
-        [self dealloc];
         return S_sharedInstance;
     }
     if ((self=[super init])) {
@@ -226,13 +225,6 @@ enum {
 
 - (void)dealloc {
 	[self cleanupUPNPPortMapperTimer];
-    [_systemConfigNotificationManager release];
-    [_NATPMPPortMapper release];
-    [_UPNPPortMapper release];
-    [_portMappings release];
-    [_removeMappingQueue release];
-    [_userID release];
-    [super dealloc];
 }
 
 - (NSString *)appIdentifier
@@ -272,12 +264,12 @@ enum {
 }
 
 - (NSString *)externalIPAddress {
-    return [[_externalIPAddress retain] autorelease];
+    return _externalIPAddress;
 }
 
 - (NSString *)localBonjourHostName {
     SCDynamicStoreRef dynRef = SCDynamicStoreCreate(kCFAllocatorSystemDefault, (CFStringRef)@"TCMPortMapper", NULL, NULL); 
-    NSString *hostname = [(NSString *)SCDynamicStoreCopyLocalHostName(dynRef) autorelease];
+    NSString *hostname = (NSString *)CFBridgingRelease(SCDynamicStoreCopyLocalHostName(dynRef));
     CFRelease(dynRef);
     return [hostname stringByAppendingString:@".local"];
 }
@@ -285,15 +277,14 @@ enum {
 - (void)updateLocalIPAddress {
     NSString *routerAddress = [self routerIPAddress];
     SCDynamicStoreRef dynRef = SCDynamicStoreCreate(kCFAllocatorSystemDefault, (CFStringRef)@"TCMPortMapper", NULL, NULL); 
-    NSDictionary *scobjects = (NSDictionary *)SCDynamicStoreCopyValue(dynRef,(CFStringRef)@"State:/Network/Global/IPv4" ); 
+    NSDictionary *scobjects = (NSDictionary *)CFBridgingRelease(SCDynamicStoreCopyValue(dynRef,(CFStringRef)@"State:/Network/Global/IPv4" ));
     
     NSString *ipv4Key = [NSString stringWithFormat:@"State:/Network/Interface/%@/IPv4", [scobjects objectForKey:(NSString *)kSCDynamicStorePropNetPrimaryInterface]];
     
     CFRelease(dynRef);
-    [scobjects release];
     
     dynRef = SCDynamicStoreCreate(kCFAllocatorSystemDefault, (CFStringRef)@"TCMPortMapper", NULL, NULL); 
-    scobjects = (NSDictionary *)SCDynamicStoreCopyValue(dynRef,(CFStringRef)ipv4Key); 
+    scobjects = (NSDictionary *)CFBridgingRelease(SCDynamicStoreCopyValue(dynRef,(CFStringRef)ipv4Key));
     
 //        NSLog(@"%s scobjects:%@",__FUNCTION__,scobjects);
     NSArray *IPAddresses = (NSArray *)[scobjects objectForKey:(NSString *)kSCPropNetIPv4Addresses];
@@ -331,17 +322,16 @@ enum {
         _localIPOnRouterSubnet = NO;
     }
     CFRelease(dynRef);
-    [scobjects release];
 }
 
 - (NSString *)localIPAddress {
     // make sure it is up to date
     [self updateLocalIPAddress];
-    return [[_localIPAddress retain] autorelease];
+    return _localIPAddress;
 }
 
 - (NSString *)userID {
-    return [[_userID retain] autorelease];
+    return _userID;
 }
 
 + (NSString *)sizereducableHashOfString:(NSString *)inString {
@@ -372,7 +362,6 @@ enum {
     if (_userID != aUserID) {
         NSString *tmp = _userID;
         _userID = [aUserID copy];
-        [tmp release];
     }
 }
 
@@ -407,7 +396,6 @@ enum {
 - (void)removePortMapping:(TCMPortMapping *)aMapping {
     if (aMapping) {
         @synchronized(_portMappings) {
-            [[aMapping retain] autorelease];
             [_portMappings removeObject:aMapping];
         }
         @synchronized(_removeMappingQueue) {
@@ -494,8 +482,7 @@ enum {
 - (void)setExternalIPAddress:(NSString *)anIPAddress {
     if (_externalIPAddress != anIPAddress) {
         NSString *tmp=_externalIPAddress;
-        _externalIPAddress = [anIPAddress retain];
-        [tmp release];
+        _externalIPAddress = anIPAddress;
     }
     // notify always even if the external IP Address is unchanged so that we get the notification anytime when new information is here
     [[NSNotificationCenter defaultCenter] postNotificationName:TCMPortMapperExternalIPAddressDidChange object:self];
@@ -504,8 +491,7 @@ enum {
 - (void)setLocalIPAddress:(NSString *)anIPAddress {
     if (_localIPAddress != anIPAddress) {
         NSString *tmp=_localIPAddress;
-        _localIPAddress = [anIPAddress retain];
-        [tmp release];
+        _localIPAddress = anIPAddress;
     }
 }
 
@@ -662,7 +648,7 @@ enum {
         [[NSNotificationCenter defaultCenter] postNotificationName:TCMPortMapperDidFinishSearchForRouterNotification object:self];
     }
     if (!_upnpPortMapperTimer) {
-    	_upnpPortMapperTimer = [[NSTimer scheduledTimerWithTimeInterval:UPNP_REFRESH_INTERVAL target:self selector:@selector(refresh) userInfo:nil repeats:YES] retain];
+    	_upnpPortMapperTimer = [NSTimer scheduledTimerWithTimeInterval:UPNP_REFRESH_INTERVAL target:self selector:@selector(refresh) userInfo:nil repeats:YES];
     }
 }
 
@@ -686,7 +672,6 @@ enum {
 - (void)cleanupUPNPPortMapperTimer {
 	if (_upnpPortMapperTimer) {
 		[_upnpPortMapperTimer invalidate];
-		[_upnpPortMapperTimer release];
 		_upnpPortMapperTimer = nil;
 	}
 }
@@ -749,7 +734,6 @@ enum {
 
 
 - (void)setMappingProtocol:(NSString *)aProtocol {
-    [_mappingProtocol autorelease];
     _mappingProtocol = [aProtocol copy];
 }
 
@@ -759,7 +743,6 @@ enum {
 
 - (void)setRouterName:(NSString *)aRouterName {
 //    NSLog(@"%s %@->%@",__FUNCTION__,_routerName,aRouterName);
-    [_routerName autorelease];
     _routerName = [aRouterName copy];
 }
 
@@ -777,13 +760,12 @@ enum {
 
 - (NSString *)routerIPAddress {
     SCDynamicStoreRef dynRef = SCDynamicStoreCreate(kCFAllocatorSystemDefault, (CFStringRef)@"TCMPortMapper", NULL, NULL); 
-    NSDictionary *scobjects = (NSDictionary *)SCDynamicStoreCopyValue(dynRef,(CFStringRef)@"State:/Network/Global/IPv4" );
+    NSDictionary *scobjects = (NSDictionary *)CFBridgingRelease(SCDynamicStoreCopyValue(dynRef,(CFStringRef)@"State:/Network/Global/IPv4" ));
     
     NSString *routerIPAddress = (NSString *)[scobjects objectForKey:(NSString *)kSCPropNetIPv4Router];
-    routerIPAddress = [[routerIPAddress copy] autorelease];
+    routerIPAddress = [routerIPAddress copy];
     
     CFRelease(dynRef);
-    [scobjects release];
     return routerIPAddress;
 }
 

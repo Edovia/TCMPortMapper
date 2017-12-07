@@ -38,21 +38,17 @@ NSString * const TCMUPNPPortMapperDidEndWorkingNotification   =@"TCMUPNPPortMapp
 }
 
 - (void)dealloc {
-    [_threadIsRunningLock release];
-    [_latestUPNPPortMappingsList release];
-    [super dealloc];
 }
 
 - (void)setLatestUPNPPortMappingsList:(NSArray *)aLatestList {
     if (aLatestList != _latestUPNPPortMappingsList) {
         id tmp = _latestUPNPPortMappingsList;
-        _latestUPNPPortMappingsList = [aLatestList retain];
-        [tmp autorelease];
+        _latestUPNPPortMappingsList = aLatestList;
     }
 }
 
 - (NSArray *)latestUPNPPortMappingsList {
-    return [[_latestUPNPPortMappingsList retain] autorelease];
+    return _latestUPNPPortMappingsList;
 }
 
 
@@ -120,7 +116,7 @@ NSString * const TCMUPNPPortMapperDidEndWorkingNotification   =@"TCMUPNPPortMapp
 			NSString *hashString = [TCMPortMapper sizereducableHashOfString:preliminaryDescription];
 			if ([hashString length] > PREFIX_MATCH_MIN_LENGTH) hashString = [hashString substringToIndex:PREFIX_MATCH_MIN_LENGTH];
 			[descriptionComponents insertObject:hashString atIndex:0];
-	        description = [[descriptionComponents componentsJoinedByString:@"."] retain];
+	        description = [descriptionComponents componentsJoinedByString:@"."];
 //			NSLog(@"%s description: %@",__FUNCTION__,description);
 		}
     }
@@ -149,7 +145,6 @@ NSString * const TCMUPNPPortMapperDidEndWorkingNotification   =@"TCMUPNPPortMapp
 
 - (void)refreshInThread {
     [_threadIsRunningLock lock];
-    NSAutoreleasePool *pool = [NSAutoreleasePool new];
     [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:TCMUPNPPortMapperDidBeginWorkingNotification object:self];
     struct UPNPDev * devlist = 0;
     const char * multicastif = 0;
@@ -273,7 +268,6 @@ NSString * const TCMUPNPPortMapperDidEndWorkingNotification   =@"TCMUPNPPortMapp
     }
     // the delaying bridges the small time gap between this thread and the update thread
     [self performSelectorOnMainThread:@selector(postDelayedDidEndWorkingNotification) withObject:nil waitUntilDone:NO];
-    [pool release];
 }
 
 - (void)updatePortMappings {
@@ -361,7 +355,6 @@ NSString * const TCMUPNPPortMapperDidEndWorkingNotification   =@"TCMUPNPPortMapp
 
 - (void)updatePortMappingsInThread {
     [_threadIsRunningLock lock];
-    NSAutoreleasePool *pool = [NSAutoreleasePool new];
     [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:TCMUPNPPortMapperDidBeginWorkingNotification object:self];
     BOOL didFail=NO;
     TCMPortMapper *pm=[TCMPortMapper sharedInstance];
@@ -370,7 +363,7 @@ NSString * const TCMUPNPPortMapperDidEndWorkingNotification   =@"TCMUPNPPortMapp
     // we need to safeguard mappings that others might have made 
     // (upnp is quite generous in giving us what we want, even if 
     //  other mappings are there, especially when from the same local IP)
-    NSMutableIndexSet *reservedPortNumbers = [[NSMutableIndexSet new] autorelease];
+    NSMutableIndexSet *reservedPortNumbers = [NSMutableIndexSet new];
     // get port mapping list as reference first
     NSMutableArray *latestUPNPPortMappingsList = [NSMutableArray array];
 {
@@ -536,8 +529,6 @@ NSString * const TCMUPNPPortMapperDidEndWorkingNotification   =@"TCMUPNPPortMapp
     
     // this tiny delay should take account of the cases where we restart the loop (e.g. removing a port mapping and then stopping the portmapper)
     [self performSelectorOnMainThread:@selector(postDelayedDidEndWorkingNotification) withObject:nil waitUntilDone:NO];
-
-    [pool release];
 }
 
 - (void)stop {
