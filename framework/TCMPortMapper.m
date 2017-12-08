@@ -13,7 +13,7 @@
 #import <netinet/if_ether.h>
 #import <net/if_dl.h>
 
-@import AppKit;
+#import <AppKit/AppKit.h>
 
 // openssl is deprecated on OS X 10.7+
 #ifdef USE_OPENSSL
